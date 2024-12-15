@@ -11,7 +11,7 @@ export function PokeCard(props) {
 		}
 		let cache = {};
 		if (localStorage.getItem("pokedex")) {
-			cache = JSON.parse(localStorage.getItem("pokedex"));
+			cache = JSON.parse(localStorage.getItem("pokemon"));
 		}
 		if (selectedPokemon in cache) {
 			setData(cache[selectedPokemon]);
