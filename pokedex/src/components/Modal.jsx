@@ -1,6 +1,4 @@
-export function Modal() {
+export default function Modal() {
   return
 
 }
-
-
