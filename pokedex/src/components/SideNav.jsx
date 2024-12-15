@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { first151Pokemon, getFullPokedexNumber } from "../utils";
-export function SideNav() {
+export function SideNav(props,propsIndex) {
 	return (
 		<nav>
 			<div className={"header"}>
@@ -18,4 +18,3 @@ export function SideNav() {
 		</nav>
 	);
 }
- 
