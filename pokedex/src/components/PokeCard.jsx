@@ -11,7 +11,7 @@ export function PokeCard(props) {
 		}
 		let cache = {};
 		if (localStorage.getItem("pokedex")) {
-			cache = JSON.parse(localStorage.getItem("pokedex"));
+			cache = JSON.parse(localStorage.getItem("pokemon"));
 		}
 		if (selectedPokemon in cache) {
 			setData(cache[selectedPokemon]);
@@ -30,7 +30,7 @@ export function PokeCard(props) {
 				const pokemonData = await res.json();
 				setData(pokemonData);
 				cache[selectedPokemon] = pokemonData;
-				localStorage.setItem("pokedex", JSON.stringify(cache));
+				localStorage.setItem("pokemon", JSON.stringify(cache));
 			} catch (err) {
 				console.log(err.message);
 			} finally {
