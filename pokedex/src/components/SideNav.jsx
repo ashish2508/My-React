@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { first151Pokemon, getFullPokedexNumber } from "../utils";
-export function SideNav(props,propsIndex) {
+export default function SideNav() {
 	return (
 		<nav>
 			<div className={"header"}>
@@ -9,7 +9,7 @@ export function SideNav(props,propsIndex) {
       <input type="text" />
 			{first151Pokemon.map((pokemon, pokemonIndex) => {
 				return (
-					<button className={"nav-card"}>
+					<button key={pokemonIndex} className={"nav-card"}>
 						<p>{getFullPokedexNumber(pokemonIndex)}</p>
 						<p>{pokemon}</p>
 					</button>
