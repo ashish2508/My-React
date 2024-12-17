@@ -113,16 +113,21 @@ export default function PokeCard(props) {
 					}}
 				>
 					<div>
-						<h6>Name</h6>
-						<h2 style={{color:"deeppink"}}>{skill?.name.replaceAll("-", " ")}</h2>
+						<h6>NAME</h6>
+						<h2 style={{ color: "deepskyblue" }}>
+							{skill?.name.replaceAll("-", " ")}
+						</h2>
 					</div>
 					<div>
-						<h6>Description</h6>
-						<p style={{ fontFamily: "'Press Start 2P', cursive",
-              fontSize:"20px",
-              color:"darkseagreen",
-              lineHeight:"50px"
-             }}>
+						<h6>DESCRIPTION</h6>
+						<p
+							style={{
+								fontFamily: "'Press Start 2P', cursive",
+								fontSize: "1vw",
+								color: "wheat",
+								lineHeight: "50px",
+							}}
+						>
 							{skill?.description || "None Available through the API"}
 						</p>
 					</div>
@@ -180,15 +185,13 @@ export default function PokeCard(props) {
 						<div key={statIndex} className="stat-item">
 							<p
 								style={{
-									fontWeight: "bold",
-									letterSpacing: "3px",
-									fontFamily: "JetBrains Mono",
+									letterSpacing: "2px",
 									color: "burlywood",
 								}}
 							>
-								{stat?.name.replaceAll("-", " ")}
+								{stat?.name.replaceAll("-", " ")}:
 							</p>
-							<h4 style={{ fontFamily: "JetBrains Mono" }}> → {base_stat}</h4>
+							<h4 style={{ fontFamily: "JetBrains Mono" }}>{base_stat}</h4>
 						</div>
 					);
 				})}
@@ -218,7 +221,7 @@ export default function PokeCard(props) {
 								style={{
 									fontFamily: "'Press Start 2P', cursive",
 									fontWeight: "300",
-									fontSize: "14px",
+									fontSize: "0.8vw",
 									color: "white",
 									textShadow: "6px 2px rgb(228, 43, 92), 6px 4px rgb(8, 8, 61)",
 									animation: "pulse 2s infinite",
