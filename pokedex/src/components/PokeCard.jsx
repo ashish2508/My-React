@@ -2,12 +2,14 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { getFullPokedexNumber, getPokedexNumber } from "../utils";
+import Modal from "./Modal";
 import TypeCard from "./TypeCard";
-
 export default function PokeCard(props) {
 	const { selectedPokemon } = props;
 	const [data, setData] = useState(null);
 	const [loading, setloading] = useState(false);
+	const [skill, setSkill] = useState(null);
+	const [loadingSkill, setLoadingSkill] = useState(false);
 
 	const { name, height, abilities, stats, types, moves, sprites } = data || {};
 
@@ -21,6 +23,44 @@ export default function PokeCard(props) {
 		return true;
 	});
 
+	async function fetchMoveData(move, moveUrl) {
+		if (loadingSkill || !localStorage || !moveUrl) {
+			return;
+		}
+		//checking cache in case
+		let c = {};
+		if (localStorage.getItem("pokemon-moves")) {
+			c = JSON.parse(localStorage.getItem("pokemon-moves"));
+		}
+		if (move in c) {
+			setSkill(c[move]);
+			console.log("Found move in cache");
+			return;
+		}
+		try {
+			setLoadingSkill(true);
+			const res = await fetch(moveUrl);
+			const moveData = await res.json();
+			console.log("fetched move from API", moveData);
+
+			const description = moveData?.flavor_text_entries.filter((val) => {
+				return val.version_group.name == "firered-leafgreen";
+			})[0]?.flavor_text;
+
+			const skillData = {
+				name: move,
+				description,
+			};
+			setSkill(skillData);
+			c[move] = skillData;
+			localStorage.setItem("pokemon-moves", JSON.stringify(c));
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setLoadingSkill(false);
+		}
+	}
+
 	useEffect(() => {
 		if (loading || !localStorage) {
 			return;
@@ -31,6 +71,7 @@ export default function PokeCard(props) {
 		}
 		if (selectedPokemon in cache) {
 			setData(cache[selectedPokemon]);
+			console.log("Found Pokemon in cache");
 			return;
 		}
 		async function fetchPokemonData() {
@@ -45,7 +86,7 @@ export default function PokeCard(props) {
 				}
 				const pokemonData = await res.json();
 				setData(pokemonData);
-				console.log(pokemonData);
+				console.log("Fetched Pokemon Data");
 				cache[selectedPokemon] = pokemonData;
 				localStorage.setItem("pokedex", JSON.stringify(cache));
 			} catch (err) {
@@ -65,6 +106,28 @@ export default function PokeCard(props) {
 	}
 	return (
 		<div className="poke-card">
+			{skill && (
+				<Modal
+					handleCloseModal={() => {
+						setSkill(null);
+					}}
+				>
+					<div>
+						<h6>Name</h6>
+						<h2 style={{color:"deeppink"}}>{skill?.name.replaceAll("-", " ")}</h2>
+					</div>
+					<div>
+						<h6>Description</h6>
+						<p style={{ fontFamily: "'Press Start 2P', cursive",
+              fontSize:"20px",
+              color:"darkseagreen",
+              lineHeight:"50px"
+             }}>
+							{skill?.description || "None Available through the API"}
+						</p>
+					</div>
+				</Modal>
+			)}
 			<div>
 				<h4>#{getFullPokedexNumber(selectedPokemon)}</h4>
 				<h2>{name}</h2>
@@ -99,7 +162,17 @@ export default function PokeCard(props) {
 					);
 				})}
 			</div>
-			<h3 style={{ color: "#7AC74C" }}>STATS</h3>
+			<h3
+				style={{
+					border: "4px solid black",
+					padding: "10px 20px",
+					backgroundColor: "#d83512",
+					color: "#fff",
+					cursor: "pointer",
+				}}
+			>
+				STATS
+			</h3>
 			<div className="stats-card">
 				{stats.map((statObj, statIndex) => {
 					const { stat, base_stat } = statObj;
@@ -110,25 +183,49 @@ export default function PokeCard(props) {
 									fontWeight: "bold",
 									letterSpacing: "3px",
 									fontFamily: "JetBrains Mono",
+									color: "burlywood",
 								}}
 							>
 								{stat?.name.replaceAll("-", " ")}
 							</p>
-							<h4 style={{ fontFamily: "JetBrains Mono" }}>{base_stat}</h4>
+							<h4 style={{ fontFamily: "JetBrains Mono" }}> → {base_stat}</h4>
 						</div>
 					);
 				})}
 			</div>
-			<h3 style={{ color: "darkmagenta" }}>MOVES</h3>
+			<h3
+				style={{
+					border: "4px solid black",
+					padding: "10px 20px",
+					backgroundColor: "#f39c12",
+					color: "#fff",
+					cursor: "none",
+				}}
+			>
+				MOVES
+			</h3>
 			<div className="pokemon-move-grid">
 				{moves.map((moveObj, moveIndex) => {
 					return (
 						<button
 							className="button-card pokemon-move"
 							key={moveIndex}
-							onClick={() => {}}
+							onClick={() => {
+								fetchMoveData(moveObj?.move?.name, moveObj?.move?.url);
+							}}
 						>
-							<p style={{fontFamily:"Fira Code"}}>{moveObj?.move?.name.replaceAll("-", " ")}</p>
+							<p
+								style={{
+									fontFamily: "'Press Start 2P', cursive",
+									fontWeight: "300",
+									fontSize: "14px",
+									color: "white",
+									textShadow: "6px 2px rgb(228, 43, 92), 6px 4px rgb(8, 8, 61)",
+									animation: "pulse 2s infinite",
+								}}
+							>
+								{moveObj?.move?.name.replaceAll("-", " ")}
+							</p>
 						</button>
 					);
 				})}
