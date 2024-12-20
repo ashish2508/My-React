@@ -123,8 +123,8 @@ export default function PokeCard(props) {
 						<p
 							style={{
 								fontFamily: "'Press Start 2P', cursive",
-								fontSize: "1vw",
-								color: "wheat",
+								// fontSize: "1vw",
+								color: "red",
 								lineHeight: "50px",
 							}}
 						>
@@ -221,7 +221,7 @@ export default function PokeCard(props) {
 								style={{
 									fontFamily: "'Press Start 2P', cursive",
 									fontWeight: "300",
-									fontSize: "0.8vw",
+									// fontSize: "0.8vw",
 									color: "white",
 									textShadow: "6px 2px rgb(228, 43, 92), 6px 4px rgb(8, 8, 61)",
 									animation: "pulse 2s infinite",
